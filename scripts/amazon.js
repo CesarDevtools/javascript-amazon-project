@@ -1,10 +1,16 @@
-import { cart, addToCart } from '../data/cart.js';
-import { products } from '../data/products.js';
-import { formatCurrency } from './utils/money.js';
+// --- IMPORTACIONES ---
+// Importa el carrito y la función para añadir al carrito.
+import {cart, addToCart} from '../data/cart.js';
+// Importa la lista de productos.
+import {products} from '../data/products.js';
+// Importa la función para cambiar el formato del precio.
+import {formatCurrency} from './utils/money.js';
 
-
+// --- GENERACIÓN DEL HTML DE LOS PRODUCTOS ---
+// Variable para almacenar el HTML de la cuadrícula de productos.
 let productsHTML = '';
 
+// Itera sobre cada producto para generar su HTML.
 products.forEach((product) => {
   productsHTML += `
     <div class="product-container">
@@ -59,27 +65,34 @@ products.forEach((product) => {
   `;
 });
 
+// --- RENDERIZADO Y MANEJO DE EVENTOS ---
+// Inserta el HTML generado en la cuadrícula de productos de la página.
 document.querySelector('.js-products-grid').innerHTML = productsHTML;
 
-
-
-
-function updateCArQuantity() {
+// Función para actualizar la cantidad total de artículos en el carrito que se muestra en el encabezado.
+function updateCartQuantity() {
+  // Calcula la cantidad total de artículos sumando las cantidades de cada item en el carrito.
   let cartQuantity = 0;
+  cart.forEach((cartItem) => {
+    cartQuantity += cartItem.quantity;
+  });
 
-      cart.forEach((cartItem) => {
-        cartQuantity += cartItem.quantity;
-      });
-
-      document.querySelector('.js-cart-quantity')
-        .innerHTML = cartQuantity;
+  // Actualiza el texto del contador del carrito en el HTML.
+  document.querySelector('.js-cart-quantity')
+    .innerHTML = cartQuantity;
 }
 
+// Añade un event listener a todos los botones "Add to Cart".
 document.querySelectorAll('.js-add-to-cart')
   .forEach((button) => {
     button.addEventListener('click', () => {
+      // Obtiene el ID del producto desde el atributo data-product-id del botón.
       const productId = button.dataset.productId;
-      addToCart();
-      updateCArQuantity();
+      
+      // Llama a la función para añadir el producto al carrito.
+      addToCart(productId);
+      
+      // Actualiza la cantidad de artículos en el carrito que se muestra en el encabezado.
+      updateCartQuantity();
     });
   });
